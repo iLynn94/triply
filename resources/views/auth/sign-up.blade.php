@@ -36,11 +36,22 @@
             <x-ui.error name="phone_number" />
         </x-ui.field>
 
-        <x-ui.field required>
-            <x-ui.label>Citizenship</x-ui.label>
-            <x-ui.input wire:model="citizenship" name="citizenship" type="text" placeholder="Enter your citizenship" autocomplete="off" value="{{ old('citizenship') }}"/>
-            <x-ui.error name="citizenship" />
-        </x-ui.field>
+        <div x-data="{ citizenship: '{{ old('citizenship') }}' }">
+            <x-ui.field required>
+                <x-ui.label>Citizenship</x-ui.label>
+                <x-ui.select
+                    placeholder="Select citizenship"
+                    x-model="citizenship"
+                    name="citizenship"
+                >
+                    <x-ui.select.option value="Kenyan Citizen" label="Kenyan Citizen" />
+                    <x-ui.select.option value="Kenyan Resident" label="Kenyan Resident" />
+                    <x-ui.select.option value="East Africa Resident" label="East Africa Resident" />
+                    <x-ui.select.option value="Non Resident" label="Non Resident" />
+                </x-ui.select>
+                <x-ui.error name="citizenship" />
+            </x-ui.field>
+        </div>
     </div>
 
     {{-- Password --}}

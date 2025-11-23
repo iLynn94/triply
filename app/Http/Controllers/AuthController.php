@@ -46,7 +46,7 @@ class AuthController extends Controller
             'last_name'         => 'required|string|max:100',
             'email'             => 'required|email|max:255|unique:users,email',
             'phone_number'      => 'nullable|string|max:20',
-            'citizenship'       => 'required|string|max:100',
+            'citizenship'       => 'required|in:Kenyan Citizen,Kenyan Resident,East Africa Resident,Non Resident',
             'password'          => 'required|string|min:6|confirmed',
         ]);
 

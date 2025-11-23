@@ -5,62 +5,51 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRatingRequest;
 use App\Http\Requests\UpdateRatingRequest;
 use App\Models\Rating;
+use App\Models\Trip;
+use Illuminate\Support\Facades\Auth;
 
 class RatingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $trips = Trip::whereHas('bookings', function ($q) {
+            $q->where('user_id', Auth::id())
+              ->where('status', 'confirmed');
+        })->with('rating')->get();
+
+        return view('ratings.index', compact('trips'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('ratings.create');
+        $trip = Trip::findOrFail(request('trip_id'));
+
+        return view('ratings.create', compact('trip'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreRatingRequest $request)
     {
-        //
+        Rating::updateOrCreate(
+            ['user_id' => Auth::id(), 'trip_id' => $request->trip_id],
+            ['rating' => $request->rating, 'comment' => $request->comment]
+        );
+
+        return redirect()->route('rating.index')->with('success', 'Rating submitted!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Rating $rating)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Rating $rating)
     {
+        if ($rating->user_id !== Auth::id()) abort(403);
+
         return view('ratings.edit', compact('rating'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRatingRequest $request, Rating $rating)
     {
-        //
-    }
+        if ($rating->user_id !== Auth::id()) abort(403);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Rating $rating)
-    {
-        //
+        $rating->update($request->validated());
+
+        return redirect()->route('rating.index')->with('success', 'Rating updated!');
     }
 }

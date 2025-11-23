@@ -1,4 +1,4 @@
-<?php
+php artisan make:model Cart -m<?php
 
 namespace Database\Seeders;
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CartController; // <--- 1. ADDED THIS IMPORT
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,9 +25,16 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/cart', function () {
-        return view('cart.index');
-    })->name('cart');
+    // <--- 2. REPLACED THE OLD CART ROUTE WITH THESE 3 NEW ROUTES --->
+    // Show the cart staging area
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    
+    // Add a trip to the staging area
+    Route::post('/cart/add/{id}', [CartController::class, 'store'])->name('cart.add');
+    
+    // Remove a trip from the staging area
+    Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    // <--- END OF CART CHANGES --->
 
     Route::get('/dashboard', function () {
         return view('dashboard.index');

@@ -7,7 +7,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\CartController; // <--- 1. ADDED THIS IMPORT
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,10 +15,6 @@ Route::get('/', function () {
 
 // Public route - Guests can view trip details
 Route::get('/trip/{trip}', [TripController::class, 'show'])->name('trip.show');
-
-Route::get('/login', function () {
-    return redirect()->route('sign-in');
-})->name('login');
 
 Route::middleware('guest')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'showSignIn'])->name('login');;
@@ -30,10 +25,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    // Email Verification Routes
-    Route::get('/email/verify', function () {
-        return view('auth.verify-email');
-    })->name('verification.notice');
     // Email Verification Routes
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
@@ -50,25 +41,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/cart', function () {
         return view('cart.index');
     })->name('cart');
-
-    Route::get('/email/verify/{id}/{hash}', [ProfileController::class, 'verifyEmail'])
-        ->middleware(['signed'])
-        ->name('verification.verify');
-
-    Route::post('/email/verification-notification', [ProfileController::class, 'resendVerificationEmail'])
-        ->middleware(['throttle:6,1'])
-        ->name('verification.send');
-
-    // <--- 2. REPLACED THE OLD CART ROUTE WITH THESE 3 NEW ROUTES --->
-    // Show the cart staging area
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    
-    // Add a trip to the staging area
-    Route::post('/cart/add/{id}', [CartController::class, 'store'])->name('cart.add');
-    
-    // Remove a trip from the staging area
-    Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    // <--- END OF CART CHANGES --->
 
     // Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -87,13 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/create-travel-package', [TripController::class, 'create'])->name('create-travel-package');
     Route::post('/create-travel-package', [TripController::class, 'store']);
 
-    // Create travel package route (alias for trips.create)
-    Route::get('/create-travel-package', [TripController::class, 'create'])->name('create-travel-package');
-    Route::post('/create-travel-package', [TripController::class, 'store']);
-
     // Trip resource routes (except show which is public)
-    Route::resource('tripss', TripController::class)->except(['show']);
-    Route::resource('bookingss', BookingController::class)->except(['index']);
+    Route::resource('trips', TripController::class)->except(['show']);
+    Route::resource('bookings', BookingController::class)->except(['index']);
     Route::resource('wishlist', WishlistController::class);
     Route::post('/wishlist/{trip}', [WishlistController::class, 'store'])->name('wishlist.store');
 
@@ -101,10 +69,6 @@ Route::middleware('auth')->group(function () {
 
     
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    Route::post('/wishlist/toggle/{trip}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
-
-     Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::post('/wishlist/toggle/{trip}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 

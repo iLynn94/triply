@@ -4,7 +4,7 @@
         <img
             src="{{ $trip->cover_image_url }}"
             alt="{{ $trip->title }}"
-            class="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
+            class="w-full h-36 sm:h-48 object-cover transition-transform duration-300 hover:scale-110"
         >
 
         @auth
@@ -17,7 +17,7 @@
     </div>
 
     {{-- Trip Details --}}
-    <div class="p-4">
+    <div class="p-2 sm:p-4">
         {{-- Title --}}
         <h3 class="text-sm font-semibold text-gray-900 mb-1 min-h-10 line-clamp-2">
             {{ $trip->title }}
@@ -34,14 +34,14 @@
         {{-- Price and CTA --}}
         <div class="flex items-center justify-between mt-4">
             <div>
-                <p class="text-xs text-gray-500">From</p>
-                <p class="text-base font-bold text-orange-600">
+                <p class="text-[9px] sm:text-xs text-gray-500">From</p>
+                <p class="text-[12px] sm:text-base font-bold text-orange-600">
                     Ksh {{ number_format($trip->base_price_per_person, 0) }}
                 </p>
             </div>
             <a
                 href="{{ route('trip.show', $trip->id) }}"
-                class="group inline-flex items-center gap-1 text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
+                class="group inline-flex items-center gap-0.5 sm:gap-1 text-[11px] sm:text-sm font-medium text-gray-800 hover:text-blue-600 transition-colors"
             >
                 More Info
                 <x-heroicon-o-arrow-up-right class="w-3 h-4 text-orange-600 group-hover:text-blue-600 transition-colors" />

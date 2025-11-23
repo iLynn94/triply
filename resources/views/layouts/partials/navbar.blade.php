@@ -1,31 +1,31 @@
-<nav class="sticky top-0 z-50 flex h-auto items-center justify-between bg-white px-4 py-2.5 shadow-md transition-all duration-300 ease-in-out md:px-8 lg:px-32 xl:px-48">
+<nav id="mainNavbar" class="sticky top-0 z-50 flex h-auto items-center justify-between bg-white px-4 py-2.5 shadow-md transition-all duration-300 ease-in-out md:px-8 lg:px-32 xl:px-48">
     
     {{-- Logo Section --}}
     <div class="flex items-center">
-        <a href="/" class="flex items-center gap-2 text-2xl font-bold text-orange-600 no-underline md:text-[1.75rem]">
-            <img src="/images/logo.png" alt="Triply Logo" class="h-8 w-auto">
+        <a href="/" class="flex items-center gap-2 text-xl lg:text-2xl font-bold text-orange-600 no-underline md:text-[1.75rem]">
+            <img src="/images/logo.png" alt="Triply Logo" class="h-6 lg:h-8 w-auto">
             <span>Triply</span>
         </a>
     </div>
 
     {{-- Desktop Navigation Links --}}
     <div class="hidden md:flex">
-        <ul class="flex list-none gap-12 p-0">
+        <ul class="flex list-none gap-6 lg:gap-12 p-0">
             <li>
-                <a href="/" class="text-xl font-medium text-gray-600 transition-all duration-300 ease-in-out hover:text-gray-900 {{ request()->is('/') ? 'font-semibold text-gray-900' : '' }}">
+                <a href="/" class="text-lg lg:text-xl font-medium text-gray-600 transition-all duration-300 ease-in-out hover:text-gray-900 {{ request()->is('/') ? 'font-semibold text-gray-900' : '' }}">
                     Home
                 </a>
             </li>
 
             @auth
                 <li>
-                    <a href="/dashboard" class="text-xl font-medium text-gray-600 transition-all duration-300 ease-in-out hover:text-gray-900 {{ request()->is('dashboard') ? 'font-semibold text-gray-900' : '' }}">
+                    <a href="/dashboard" class="text-lg lg:text-xl font-medium text-gray-600 transition-all duration-300 ease-in-out hover:text-gray-900 {{ request()->is('dashboard') ? 'font-semibold text-gray-900' : '' }}">
                         Dashboard
                     </a>
                 </li>
 
                 <li>
-                    <a href="/create-travel-package" class="text-xl font-medium text-gray-600 transition-all duration-300 ease-in-out hover:text-gray-900 {{ request()->is('create-travel-package') ? 'font-semibold text-gray-900' : '' }}">
+                    <a href="/create-travel-package" class="text-lg lg:text-xl font-medium text-gray-600 transition-all duration-300 ease-in-out hover:text-gray-900 {{ request()->is('create-travel-package') ? 'font-semibold text-gray-900' : '' }}">
                         Create Travel Package
                     </a>
                 </li>
@@ -48,12 +48,12 @@
     @auth
         {{-- Desktop Right Icons (User Dropdown) --}}
         <div class="hidden md:flex">
-            <ul class="flex list-none gap-7 p-0">
+            <ul class="flex list-none gap-5 lg:gap-7 p-0">
                 <li>
                     <a href="/cart" class="cursor-pointer border-none bg-transparent p-0">
                         <x-dynamic-component
                             :component="request()->is('cart') ? 'heroicon-s-shopping-bag' : 'heroicon-o-shopping-bag'"
-                            class="h-[25px] w-[25px] text-gray-700"
+                            class="h-[22px] w-[22px] lg:h-[25px] lg:w-[25px] text-gray-700"
                         />
                     </a>
                 </li>
@@ -62,7 +62,7 @@
                     <a href="/wishlist" class="cursor-pointer border-none bg-transparent p-0">
                         <x-dynamic-component
                             :component="request()->is('wishlist') ? 'heroicon-s-heart' : 'heroicon-o-heart'"
-                            class="h-[25px] w-[25px] text-gray-700"
+                            class="h-[22px] w-[22px] lg:h-[25px] lg:w-[25px] text-gray-700"
                         />
                     </a>
                 </li>
@@ -71,7 +71,7 @@
                     <button class="cursor-pointer border-none bg-transparent p-0">
                         <x-dynamic-component
                             :component="request()->is('profile') ? 'heroicon-s-user' : 'heroicon-o-user'"
-                            class="h-[25px] w-[25px] text-gray-700"
+                            class="h-[22px] w-[22px] lg:h-[25px] lg:w-[25px] text-gray-700"
                         />
                     </button>
 
@@ -244,3 +244,24 @@
         menuBar3.classList.remove('-translate-y-2.5', '-rotate-45');
     });
 </script>
+
+<script>
+    const navbar = document.getElementById('mainNavbar');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+            navbar.classList.add('navbar-scrolled');
+        } else {
+            navbar.classList.remove('navbar-scrolled');
+        }
+    });
+</script>
+
+<style>
+    @media (min-width: 768px) { /* Large screens and up */
+        .navbar-scrolled {
+            background-color: rgba(255, 255, 255, 0.7); /* translucent */
+            backdrop-filter: blur(8px); /* adds a nice modern blur effect */
+        }
+    }
+</style>

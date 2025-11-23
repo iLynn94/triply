@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWishlistRequest;
 use App\Http\Requests\UpdateWishlistRequest;
+use App\Models\Trip;
 use App\Models\Wishlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
@@ -15,8 +16,28 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        $wishlistItems = Auth::user()->wishlist()->with('trip')->get();
-        return view('wishlist.index',compact('wishlistItems'));
+        return view('wishlist.index');
+    }
+
+    public function toggle(Trip $trip) {
+        $userId = auth()->id();
+
+        $wishlist = Wishlist::where('user_id', $userId)
+            ->where('trip_id', $trip->id)
+            ->first();
+
+        if ($wishlist) {
+            // Remove from wishlist
+            $wishlist->delete();
+            return back()->with('success', 'Removed from wishlist');
+        } else {
+            // Add to wishlist
+            Wishlist::create([
+                'user_id' => $userId,
+                'trip_id' => $trip->id,
+            ]);
+            return back()->with('success', 'Added to wishlist');
+        }
     }
 
     /**
@@ -32,11 +53,7 @@ class WishlistController extends Controller
      */
     public function store($trip)
     {
-        Auth::user()->wishlist()->firstOrCreate([
-            'trip_id'=>$trip
-        ]);
-
-        return redirect()->back()->with('success','Trip added to wishlist!');
+        // 
     }
 
     /**

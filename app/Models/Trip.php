@@ -117,6 +117,11 @@ class Trip extends Model
         return $this->hasMany(Rating::class);
     }
 
+    public function rating()
+    {
+        return $this->hasOne(Rating::class)->where('user_id', auth()->id());
+    }
+
     // Users who have this trip in wishlist
     public function wishlists()
     {

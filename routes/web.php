@@ -14,6 +14,10 @@ Route::get('/', function () {
 // Public route - Guests can view trip details
 Route::get('/trip/{trip}', [TripController::class, 'show'])->name('trip.show');
 
+Route::get('/login', function () {
+    return redirect()->route('sign-in');
+})->name('login');
+
 Route::middleware('guest')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'showSignIn'])->name('sign-in');
     Route::post('/sign-in', [AuthController::class, 'signIn']);

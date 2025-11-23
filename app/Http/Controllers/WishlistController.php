@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreWishlistRequest;
 use App\Http\Requests\UpdateWishlistRequest;
 use App\Models\Wishlist;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
 
 class WishlistController extends Controller
 {
@@ -13,7 +15,8 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        return view('wishlist.index');
+        $wishlistItems = Auth::user()->wishlist()->with('trip')->get();
+        return view('wishlist.index',compact('wishlistItems'));
     }
 
     /**
@@ -27,9 +30,13 @@ class WishlistController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreWishlistRequest $request)
+    public function store($trip)
     {
-        //
+        Auth::user()->wishlist()->firstOrCreate([
+            'trip_id'=>$trip
+        ]);
+
+        return redirect()->back()->with('success','Trip added to wishlist!');
     }
 
     /**

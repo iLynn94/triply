@@ -47,7 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('trip', TripController::class)->except(['show']);
     Route::resource('booking', BookingController::class)->except(['index']);
     Route::resource('wishlist', WishlistController::class);
+    Route::post('/wishlist/{trip}', [WishlistController::class, 'store'])->name('wishlist.store');
+
     Route::resource('rating', RatingController::class);
 
+    
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

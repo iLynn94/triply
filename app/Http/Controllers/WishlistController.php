@@ -40,27 +40,6 @@ class WishlistController extends Controller
         }
     }
 
-    public function toggle(Trip $trip) {
-        $userId = auth()->id();
-
-        $wishlist = Wishlist::where('user_id', $userId)
-            ->where('trip_id', $trip->id)
-            ->first();
-
-        if ($wishlist) {
-            // Remove from wishlist
-            $wishlist->delete();
-            return back()->with('success', 'Removed from wishlist');
-        } else {
-            // Add to wishlist
-            Wishlist::create([
-                'user_id' => $userId,
-                'trip_id' => $trip->id,
-            ]);
-            return back()->with('success', 'Added to wishlist');
-        }
-    }
-
     /**
      * Show the form for creating a new resource.
      */

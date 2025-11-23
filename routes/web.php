@@ -7,7 +7,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\CartController; // <--- 1. ADDED THIS IMPORT
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,10 +15,6 @@ Route::get('/', function () {
 
 // Public route - Guests can view trip details
 Route::get('/trip/{trip}', [TripController::class, 'show'])->name('trip.show');
-
-Route::get('/login', function () {
-    return redirect()->route('sign-in');
-})->name('login');
 
 Route::middleware('guest')->group(function () {
     Route::get('/sign-in', [AuthController::class, 'showSignIn'])->name('login');;
@@ -43,16 +38,9 @@ Route::middleware('auth')->group(function () {
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
 
-    // <--- 2. REPLACED THE OLD CART ROUTE WITH THESE 3 NEW ROUTES --->
-    // Show the cart staging area
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    
-    // Add a trip to the staging area
-    Route::post('/cart/add/{id}', [CartController::class, 'store'])->name('cart.add');
-    
-    // Remove a trip from the staging area
-    Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-    // <--- END OF CART CHANGES --->
+    Route::get('/cart', function () {
+        return view('cart.index');
+    })->name('cart');
 
     // Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

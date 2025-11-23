@@ -16,8 +16,7 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        $wishlistItems = Auth::user()->wishlist()->with('trip')->get();
-        return view('wishlist.index',compact('wishlistItems'));
+        return view('wishlist.index');
     }
 
     public function toggle(Trip $trip) {
@@ -54,11 +53,7 @@ class WishlistController extends Controller
      */
     public function store($trip)
     {
-        Auth::user()->wishlist()->firstOrCreate([
-            'trip_id'=>$trip
-        ]);
-
-        return redirect()->back()->with('success','Trip added to wishlist!');
+        // 
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -58,6 +59,12 @@ Route::middleware('auth')->group(function () {
     // Create travel package route (alias for trips.create)
     Route::get('/create-travel-package', [TripController::class, 'create'])->name('create-travel-package');
     Route::post('/create-travel-package', [TripController::class, 'store']);
+
+    // Payment Routes
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
+    Route::post('/payment/add/{id}', [PaymentController::class, 'store'])->name('payment.add');
+    Route::delete('/payment/remove/{id}', [PaymentController::class, 'destroy'])->name('payment.destroy');
+    Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
 
     // Trip resource routes (except show which is public)
     Route::resource('trips', TripController::class)->except(['show']);

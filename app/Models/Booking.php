@@ -22,7 +22,6 @@ class Booking extends Model
         'status',
         'payment_status',
         'start_date',
-        'end_date',
     ];
 
     /**
@@ -30,7 +29,6 @@ class Booking extends Model
      */
     protected $casts = [
         'start_date' => 'date',
-        'end_date' => 'date',
         'total_fee' => 'decimal:2',
     ];
 
@@ -73,24 +71,7 @@ class Booking extends Model
     // Check if booking dates are within trip availability
     public function isWithinAvailability()
     {
-        $trip = $this->trip;
-
-        if (!$trip || empty($trip->availability)) {
-            return true;
-        }
-
-        foreach ($trip->availability as $range) {
-            $rangeFrom = \Carbon\Carbon::parse($range['from']);
-            $rangeTo = \Carbon\Carbon::parse($range['to']);
-
-            $start = $this->start_date;
-            $end = $this->end_date ?? $this->start_date;
-
-            if ($start->between($rangeFrom, $rangeTo) && $end->between($rangeFrom, $rangeTo)) {
-                return true;
-            }
-        }
-
-        return false;
+        // Trips are now available on all dates (no specific availability restrictions)
+        return true;
     }
 }

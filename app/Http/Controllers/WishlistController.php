@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWishlistRequest;
 use App\Http\Requests\UpdateWishlistRequest;
+use App\Models\Trip;
 use App\Models\Wishlist;
 
 class WishlistController extends Controller
@@ -14,6 +15,27 @@ class WishlistController extends Controller
     public function index()
     {
         return view('wishlist.index');
+    }
+
+    public function toggle(Trip $trip) {
+        $userId = auth()->id();
+
+        $wishlist = Wishlist::where('user_id', $userId)
+            ->where('trip_id', $trip->id)
+            ->first();
+
+        if ($wishlist) {
+            // Remove from wishlist
+            $wishlist->delete();
+            return back()->with('success', 'Removed from wishlist');
+        } else {
+            // Add to wishlist
+            Wishlist::create([
+                'user_id' => $userId,
+                'trip_id' => $trip->id,
+            ]);
+            return back()->with('success', 'Added to wishlist');
+        }
     }
 
     /**

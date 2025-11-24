@@ -50,15 +50,6 @@
         <div class="hidden md:flex">
             <ul class="flex list-none gap-5 lg:gap-7 p-0">
                 <li>
-                    <a href="/payment" class="cursor-pointer border-none bg-transparent p-0">
-                        <x-dynamic-component
-                            :component="request()->is('payment') ? 'heroicon-s-shopping-bag' : 'heroicon-o-shopping-bag'"
-                            class="h-[22px] w-[22px] lg:h-[25px] lg:w-[25px] text-gray-700"
-                        />
-                    </a>
-                </li>
-
-                <li>
                     <a href="/wishlist" class="cursor-pointer border-none bg-transparent p-0">
                         <x-dynamic-component
                             :component="request()->is('wishlist') ? 'heroicon-s-heart' : 'heroicon-o-heart'"
@@ -168,12 +159,6 @@
                         Log Out
                     </button>
                 </form>
-            </li>
-
-            <li class="mb-5">
-                <a href="/payment" class="flex items-center py-2 text-[1.15rem] text-gray-600 transition-colors hover:text-orange-600 {{ request()->is('cart') ? 'font-semibold text-gray-900' : '' }}">
-                    Cart
-                </a>
             </li>
 
             <li class="mb-5">

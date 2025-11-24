@@ -260,112 +260,131 @@
                     <h3 class="text-xl font-bold text-gray-900 mb-6">Book This Trip</h3>
 
                     @auth
-                        {{-- Booking Form --}}
-                        <form action="{{ route('bookings.store') }}" method="POST" id="bookingForm" class="space-y-4">
-                            @csrf
-                            <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+                        @if($trip->status === 'open')
+                            {{-- Booking Form --}}
+                            <form action="{{ route('bookings.store') }}" method="POST" id="bookingForm" class="space-y-4">
+                                @csrf
+                                <input type="hidden" name="trip_id" value="{{ $trip->id }}">
 
-                            {{-- Adults --}}
-                            <div>
-                                <label for="adults" class="block text-sm font-medium text-gray-700 mb-1">Adults *</label>
-                                <input
-                                    type="number"
-                                    id="adults"
-                                    name="number_of_adults"
-                                    min="1"
-                                    value="1"
-                                    required
-                                    onchange="calculatePrice()"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-600 focus:border-transparent"
-                                />
-                            </div>
-
-                            {{-- Children --}}
-                           <div>
-                                <label for="children" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Children
-                                    <small class="text-gray-500">(13 years and below *)</small>
-                                </label>
-
-                                <input
-                                    type="number"
-                                    id="children"
-                                    name="number_of_children"
-                                    min="0"
-                                    value="0"
-                                    onchange="calculatePrice()"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-600 focus:border-transparent"
-                                />
-                            </div>
-
-                            {{-- Travel Date --}}
-                            <div>
-                                <label for="travel_date" class="block text-sm font-medium text-gray-700 mb-1">Travel Date *</label>
-                                <input
-                                    type="date"
-                                    id="travel_date"
-                                    name="start_date"
-                                    required
-                                    class="flatpickr w-full px-3 py-2 border rounded-lg @error('start_date') border-red-500 @enderror"
-                                    placeholder="Select date"
-                                >
-                                @error('start_date')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            {{-- Transport Options --}}
-                            @if($trip->transport_options && count($trip->transport_options) > 0)
-                            <div>
-                                <label for="transport" class="block text-sm font-medium text-gray-700 mb-1">Transport Option</label>
-                                <select
-                                    id="transport"
-                                    name="selected_transport"
-                                    onchange="calculatePrice()"
-                                    class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all appearance-none cursor-pointer hover:border-gray-400"
-                                    style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E'); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
-                                >
-                                    <option value="">No transport</option>
-                                    @foreach($trip->transport_options as $name => $details)
-                                    <option value="{{ $name }}" data-price="{{ $details['price'] }}">
-                                        {{ $name }} (+ Ksh {{ number_format($details['price'], 2) }})
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @endif
-
-                            {{-- Notes --}}
-                            <div>
-                                <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Special Requests (Optional)</label>
-                                <textarea
-                                    id="notes"
-                                    name="notes"
-                                    rows="3"
-                                    placeholder="Any special requirements..."
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-600 focus:border-transparent resize-none"
-                                ></textarea>
-                            </div>
-
-                            {{-- Price Estimate --}}
-                            <div class="bg-orange-50 border-2 border-orange-600 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-gray-700 font-medium">Estimated Total</span>
-                                    <span id="estimatedPrice" class="text-2xl font-bold text-orange-600">
-                                        Ksh {{ number_format($trip->base_price_per_person, 0) }}
-                                    </span>
+                                {{-- Adults --}}
+                                <div>
+                                    <label for="adults" class="block text-sm font-medium text-gray-700 mb-1">Adults *</label>
+                                    <input
+                                        type="number"
+                                        id="adults"
+                                        name="number_of_adults"
+                                        min="1"
+                                        value="1"
+                                        required
+                                        onchange="calculatePrice()"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                                    />
                                 </div>
-                                <p class="text-xs text-gray-600">Final price may vary</p>
-                            </div>
 
-                            {{-- Submit Button --}}
-                            <button 
-                                type="submit" 
-                                class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
-                            >
-                                Submit Booking
-                            </button>
-                        </form>
+                                {{-- Children --}}
+                               <div>
+                                    <label for="children" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Children
+                                        <small class="text-gray-500">(13 years and below *)</small>
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="children"
+                                        name="number_of_children"
+                                        min="0"
+                                        value="0"
+                                        onchange="calculatePrice()"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                                    />
+                                </div>
+
+                                {{-- Travel Date --}}
+                                <div>
+                                    <label for="travel_date" class="block text-sm font-medium text-gray-700 mb-1">Travel Date *</label>
+                                    <input
+                                        type="date"
+                                        id="travel_date"
+                                        name="start_date"
+                                        required
+                                        class="flatpickr w-full px-3 py-2 border rounded-lg @error('start_date') border-red-500 @enderror"
+                                        placeholder="Select date"
+                                    >
+                                    @error('start_date')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- Transport Options --}}
+                                @if($trip->transport_options && count($trip->transport_options) > 0)
+                                <div>
+                                    <label for="transport" class="block text-sm font-medium text-gray-700 mb-1">Transport Option</label>
+                                    <select
+                                        id="transport"
+                                        name="selected_transport"
+                                        onchange="calculatePrice()"
+                                        class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all appearance-none cursor-pointer hover:border-gray-400"
+                                        style="background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 20 20%22%3E%3Cpath stroke=%22%236b7280%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22 stroke-width=%221.5%22 d=%22M6 8l4 4 4-4%22/%3E%3C/svg%3E'); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem;"
+                                    >
+                                        <option value="">No transport</option>
+                                        @foreach($trip->transport_options as $name => $details)
+                                        <option value="{{ $name }}" data-price="{{ $details['price'] }}">
+                                            {{ $name }} (+ Ksh {{ number_format($details['price'], 2) }})
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @endif
+
+                                {{-- Notes --}}
+                                <div>
+                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Special Requests (Optional)</label>
+                                    <textarea
+                                        id="notes"
+                                        name="notes"
+                                        rows="3"
+                                        placeholder="Any special requirements..."
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-600 focus:border-transparent resize-none"
+                                    ></textarea>
+                                </div>
+
+                                {{-- Price Estimate --}}
+                                <div class="bg-orange-50 border-2 border-orange-600 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-1">
+                                        <span class="text-gray-700 font-medium">Estimated Total</span>
+                                        <span id="estimatedPrice" class="text-2xl font-bold text-orange-600">
+                                            Ksh {{ number_format($trip->base_price_per_person, 0) }}
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-gray-600">Final price may vary</p>
+                                </div>
+
+                                {{-- Submit Button --}}
+                                <button
+                                    type="submit"
+                                    class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                                >
+                                    Submit Booking
+                                </button>
+                            </form>
+                        @else
+                            {{-- Trip Not Available --}}
+                            <div class="text-center py-6">
+                                <x-heroicon-o-lock-closed class="w-16 h-16 text-gray-400 mx-auto mb-3" />
+                                <h4 class="text-base font-semibold text-gray-900 mb-2">Booking Unavailable</h4>
+                                <p class="text-sm text-gray-600 mb-2">This trip is currently not accepting bookings.</p>
+                                <small class="text-xs text-gray-500 block">
+                                    Status: <span class="font-semibold capitalize">{{ $trip->status }}</span>
+                                    @if($trip->status === 'closed')
+                                        - Closed by organizer
+                                    @elseif($trip->status === 'full')
+                                        - Trip is fully booked
+                                    @elseif($trip->status === 'cancelled')
+                                        - Trip has been cancelled
+                                    @endif
+                                </small>
+                            </div>
+                        @endif
                     @else
                         {{-- Guest Message --}}
                         <div class="text-center py-6">
@@ -401,7 +420,7 @@
                     <div class="bg-white rounded-lg shadow-sm p-6">
                         <div class="flex items-start gap-4">
                             {{-- User Photo --}}
-                            <div class="flex-shrink-0">
+                            <div class="shrink-0">
                                 @if($rating->user->profile_image_url)
                                     <img src="{{ $rating->user->profile_image_url }}" alt="{{ $rating->user->first_name }}" class="w-12 h-12 rounded-full object-cover">
                                 @else

@@ -16,6 +16,7 @@ class Trip extends Model
         'title',
         'destination',
         'organizer_id',
+        'status',
         'description',
         'hotel_name',
         'type',
@@ -30,7 +31,6 @@ class Trip extends Model
         'child_discount_percent',
         'transport_options',
         'notes',
-        'availability',
     ];
 
     /**
@@ -43,7 +43,6 @@ class Trip extends Model
         'inclusions' => 'array',
         'exclusions' => 'array',
         'transport_options' => 'array',
-        'availability' => 'array',
     ];
 
     /**
@@ -62,26 +61,6 @@ class Trip extends Model
     /**
      * Helper methods
      */
-
-    // Check if a given date is available
-    public function isAvailableOn($date)
-    {
-        if (empty($this->availability)) {
-            return true; // if no availability set, assume always available
-        }
-
-        $date = is_string($date) ? \Carbon\Carbon::parse($date) : $date;
-
-        foreach ($this->availability as $range) {
-            $from = \Carbon\Carbon::parse($range['from']);
-            $to = \Carbon\Carbon::parse($range['to']);
-            if ($date->between($from, $to)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     // Get transport price for a selected option
     public function getTransportPrice($option)
@@ -115,6 +94,11 @@ class Trip extends Model
     public function ratings()
     {
         return $this->hasMany(Rating::class);
+    }
+
+    public function rating()
+    {
+        return $this->hasOne(Rating::class)->where('user_id', auth()->id());
     }
 
     // Users who have this trip in wishlist

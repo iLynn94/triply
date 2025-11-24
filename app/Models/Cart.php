@@ -5,18 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payment extends Model
+class Cart extends Model
 {
     use HasFactory;
 
-    
-    protected $fillable = [
-        'user_id', 
-        'trip_id', 
-        'amount', 
-        'status', 
-        'payment_method'
-    ];
+    protected $fillable = ['user_id', 'trip_id', 'people', 'subtotal'];
 
     public function trip()
     {

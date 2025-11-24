@@ -21,7 +21,6 @@ class BookingSeeder extends Seeder
             'status' => 'confirmed',
             'payment_status' => 'paid',
             'start_date' => '2025-12-01',
-            'end_date' => '2025-12-06',
         ]);
 
         Booking::create([
@@ -34,7 +33,6 @@ class BookingSeeder extends Seeder
             'status' => 'pending',
             'payment_status' => 'pending',
             'start_date' => '2025-07-10',
-            'end_date' => '2025-07-13',
         ]);
     }
 }

@@ -10,6 +10,7 @@ class WishlistButton extends Component
 {
     public Trip $trip;
     public bool $isInWishlist = false;
+    public string $variant = 'small'; // 'small' for cards, 'large' for trip page
 
     public function mount()
     {

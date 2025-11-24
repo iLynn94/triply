@@ -39,10 +39,6 @@ Route::middleware('auth')->group(function () {
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
 
-    Route::get('/cart', function () {
-        return view('cart.index');
-    })->name('cart');
-
     // Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/trips/{trip}/status', [DashboardController::class, 'updateTripStatus'])->name('dashboard.trips.status');
@@ -60,11 +56,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/create-travel-package', [TripController::class, 'create'])->name('create-travel-package');
     Route::post('/create-travel-package', [TripController::class, 'store']);
 
-    // Payment Routes
-    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.index');
-    Route::post('/payment/add/{id}', [PaymentController::class, 'store'])->name('payment.add');
-    Route::delete('/payment/remove/{id}', [PaymentController::class, 'destroy'])->name('payment.destroy');
-    Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process');
+    // Booking-specific payment routes
+    Route::get('/payments/{booking}', [PaymentController::class, 'showPayment'])->name('payments.show');
+    Route::post('/payments/{booking}/process', [PaymentController::class, 'processBookingPayment'])->name('payments.booking.process');
+    Route::get('/payments/{booking}/receipt', [PaymentController::class, 'showReceipt'])->name('payments.receipt');
 
     // Trip resource routes (except show which is public)
     Route::resource('trips', TripController::class)->except(['show']);

@@ -3,16 +3,6 @@
 @section('title', 'Bookings')
 
 @section('content')
-    <main class="container min-h-screen">
-        <h1>Bookings</h1>
-    </main>
-@endsection
-
-@extends('layouts.main')
-
-@section('title', 'Bookings')
-
-@section('content')
 <div class="container mx-auto px-2 sm:px-4 py-8 md:px-8 lg:px-16 xl:px-32 min-h-screen" x-data="bookingsPageData()">
 
     {{-- Header --}}
@@ -212,7 +202,7 @@
 
                                 {{-- Payment Link --}}
                                 @if($booking->payment_status !== 'paid')
-                                    <a href="#"
+                                    <a href="{{ route('payments.show', $booking) }}"
                                        class="block w-full text-center px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium text-sm">
                                         <div class="flex items-center justify-center gap-2">
                                             <x-heroicon-o-credit-card class="w-5 h-5" />
@@ -220,7 +210,7 @@
                                         </div>
                                     </a>
                                 @else
-                                    <a href="#"
+                                    <a href="{{ route('payments.receipt', $booking) }}"
                                        class="block w-full text-center px-4 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium text-sm">
                                         <div class="flex items-center justify-center gap-2">
                                             <x-heroicon-o-check-circle class="w-5 h-5" />
@@ -576,5 +566,4 @@
         @endforeach
     });
 </script>
-@endsection
 @endsection
